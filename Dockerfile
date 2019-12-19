@@ -46,6 +46,7 @@ RUN set -ex \
         build-essential \
         default-libmysqlclient-dev \
         apt-utils \
+        gettext \
         curl \
         rsync \
         netcat \
