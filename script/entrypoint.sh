@@ -29,11 +29,12 @@ export \
 
 
 # Exporting custom connections vars
-if [ -e ${AIRFLOW_HOME}/connections.env ]; then
-  set -o allexport
-  source ${AIRFLOW_HOME}/connections.env
-  set +o allexport
-fi
+echo "Exporting connection vars..."
+env | grep AIRFLOW_CONN_ > ./connections.tpl
+envsubst < ./connections.tpl > ${AIRFLOW_HOME}/connections.env
+rm -f ./connections.tpl
+while read LINE; do export "$LINE"; done < ${AIRFLOW_HOME}/connections.env
+
 
 # Load DAGs examples (default: Yes)
 if [[ -z "$AIRFLOW__CORE__LOAD_EXAMPLES" && "${LOAD_EX:=n}" == n ]]
@@ -100,6 +101,7 @@ case "$1" in
     ;;
   *)
     # The command is something like bash, not an airflow subcommand. Just run it in the right environment.
+    echo "Executing arbitrary bash: $@"
     exec "$@"
     ;;
 esac
