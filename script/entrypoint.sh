@@ -27,7 +27,15 @@ export \
   AIRFLOW__CORE__SQL_ALCHEMY_CONN \
 
 
-# Load DAGs exemples (default: Yes)
+
+# Exporting custom connections vars
+if [ -e ${AIRFLOW_HOME}/connections.env ]; then
+  set -o allexport
+  source ${AIRFLOW_HOME}/connections.env
+  set +o allexport
+fi
+
+# Load DAGs examples (default: Yes)
 if [[ -z "$AIRFLOW__CORE__LOAD_EXAMPLES" && "${LOAD_EX:=n}" == n ]]
 then
   AIRFLOW__CORE__LOAD_EXAMPLES=False
